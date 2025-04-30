@@ -1,94 +1,45 @@
 {
   "openapi": "3.1.0",
   "info": {
-    "title": "OpenAPI Plant Store",
-    "description": "A sample API that uses a plant store as an example to demonstrate features in the OpenAPI specification",
+    "title": "Diadna Stone Verification API",
+    "description": "APIs to verify and register stones for Diadna system.",
+    "version": "1.0.0",
     "license": {
       "name": "MIT"
-    },
-    "version": "1.0.0"
+    }
   },
   "servers": [
     {
-      "url": "http://sandbox.mintlify.com"
-    }
-  ],
-  "security": [
-    {
-      "bearerAuth": []
+      "url": "https://prod.di-dna.mobioffice.io/"
     }
   ],
   "paths": {
-    "/plants": {
-      "get": {
-        "description": "Returns all plants from the system that the user has access to",
-        "parameters": [
+    "/diamond/isStonesVerified": {
+      "post": {
+        "summary": "Check if stones are verified",
+        "description": "Verifies if the provided stones are matched, not matched, or need referral.",
+        "security": [
           {
-            "name": "limit",
-            "in": "query",
-            "description": "The maximum number of results to return",
-            "schema": {
-              "type": "integer",
-              "format": "int32"
-            }
+            "SecretKeyAuth": []
           }
         ],
-        "responses": {
-          "200": {
-            "description": "Plant response",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/Plant"
-                  }
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Unexpected error",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Error"
-                }
-              }
-            }
-          }
-        }
-      },
-      "post": {
-        "description": "Creates a new plant in the store",
         "requestBody": {
-          "description": "Plant to add to the store",
+          "required": true,
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/NewPlant"
+                "$ref": "#/components/schemas/StonesVerificationRequest"
               }
             }
-          },
-          "required": true
+          }
         },
         "responses": {
           "200": {
-            "description": "plant response",
+            "description": "Verification result",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Plant"
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "unexpected error",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Error"
+                  "$ref": "#/components/schemas/StonesVerificationResponse"
                 }
               }
             }
@@ -96,121 +47,153 @@
         }
       }
     },
-    "/plants/{id}": {
-      "delete": {
-        "description": "Deletes a single plant based on the ID supplied",
-        "parameters": [
+    "/diamond/isStonesRegistered": {
+      "post": {
+        "summary": "Check if stones are registered",
+        "description": "Checks if the provided stones are already registered in the system.",
+        "security": [
           {
-            "name": "id",
-            "in": "path",
-            "description": "ID of plant to delete",
-            "required": true,
-            "schema": {
-              "type": "integer",
-              "format": "int64"
-            }
+            "SecretKeyAuth": []
           }
         ],
-        "responses": {
-          "204": {
-            "description": "Plant deleted",
-            "content": {}
-          },
-          "400": {
-            "description": "unexpected error",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Error"
-                }
-              }
-            }
-          }
-        }
-      }
-    }
-  },
-  "webhooks": {
-    "/plant/webhook": {
-      "post": {
-        "description": "Information about a new plant added to the store",
         "requestBody": {
-          "description": "Plant added to the store",
+          "required": true,
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/NewPlant"
+                "$ref": "#/components/schemas/StonesRegistrationRequest"
               }
             }
           }
         },
         "responses": {
           "200": {
-            "description": "Return a 200 status to indicate that the data was received successfully"
+            "description": "Registration result",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StonesRegistrationResponse"
+                }
+              }
+            }
           }
         }
       }
     }
   },
   "components": {
-    "schemas": {
-      "Plant": {
-        "required": [
-          "name"
-        ],
-        "type": "object",
-        "properties": {
-          "name": {
-            "description": "The name of the plant",
-            "type": "string"
-          },
-          "tag": {
-            "description": "Tag to specify the type",
-            "type": "string"
-          }
-        }
-      },
-      "NewPlant": {
-        "allOf": [
-          {
-            "$ref": "#/components/schemas/Plant"
-          },
-          {
-            "required": [
-              "id"
-            ],
-            "type": "object",
-            "properties": {
-              "id": {
-                "description": "Identification number of the plant",
-                "type": "integer",
-                "format": "int64"
-              }
-            }
-          }
-        ]
-      },
-      "Error": {
-        "required": [
-          "error",
-          "message"
-        ],
-        "type": "object",
-        "properties": {
-          "error": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "message": {
-            "type": "string"
-          }
-        }
+    "securitySchemes": {
+      "SecretKeyAuth": {
+        "type": "apiKey",
+        "in": "header",
+        "name": "secret-key"
       }
     },
-    "securitySchemes": {
-      "bearerAuth": {
-        "type": "http",
-        "scheme": "bearer"
+    "schemas": {
+      "StonesVerificationRequest": {
+        "type": "object",
+        "properties": {
+          "stones": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string",
+                  "description": "Stone ID"
+                },
+                "type": {
+                  "type": "string",
+                  "description": "Stone type for verification",
+                  "enum": ["POLISH-POLISH", "POLISH", "ROUGH", "POLISH-ROUGH"]
+                }
+              },
+              "required": ["id", "type"]
+            }
+          },
+          "companyName": {
+            "type": "string",
+            "description": "Name of the company"
+          }
+        },
+        "required": ["stones", "companyName"]
+      },
+      "StonesVerificationResponse": {
+        "type": "object",
+        "properties": {
+          "Table": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "stone": {
+                  "type": "string",
+                  "description": "Stone ID"
+                },
+                "result": {
+                  "type": "string",
+                  "description": "Verification result",
+                  "enum": ["MATCHED", "NO MATCH", "REFER", "No Query"]
+                }
+              },
+              "required": ["stone", "result"]
+            }
+          }
+        }
+      },
+      "StonesRegistrationRequest": {
+        "type": "object",
+        "properties": {
+          "stones": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string",
+                  "description": "Stone ID"
+                },
+                "type": {
+                  "type": "string",
+                  "description": "Stone type for registration",
+                  "enum": ["POLISH", "ROUGH", "AFTERSAWING"]
+                }
+              },
+              "required": ["id", "type"]
+            }
+          },
+          "companyName": {
+            "type": "string",
+            "description": "Name of the company"
+          }
+        },
+        "required": ["stones", "companyName"]
+      },
+      "StonesRegistrationResponse": {
+        "type": "object",
+        "properties": {
+          "Table": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string",
+                  "description": "Stone ID"
+                },
+                "type": {
+                  "type": "string",
+                  "description": "Stone type"
+                },
+                "result": {
+                  "type": "boolean",
+                  "description": "Registration status (true if registered, false if not)"
+                }
+              },
+              "required": ["id", "type", "result"]
+            }
+          }
+        }
       }
     }
   }

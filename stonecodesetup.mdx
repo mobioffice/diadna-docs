@@ -1,0 +1,38 @@
+---
+title: "Stone Code Mapping"
+description: "Learn how we structure, verify, and track stones using code intelligence"
+---
+
+## 🔍 Understanding the Stone Code Format
+
+Each diamond stone is assigned a structured identifier that captures critical information across its journey—from rough to polish. Here's an example code:
+
+### Visual Mapping
+
+```mermaid
+flowchart LR
+    code[ABCD.1-105-POLISH] --> base[Base: ABCD]
+    code --> part[Part: 1]
+    code --> scan[Scan: 105]
+    code --> stage[Stage: POLISH]
+
+```
+
+### Breakdown Table
+
+| **Component**      | **Value** | **Description**                               |
+| ------------------ | --------- | --------------------------------------------- |
+| 🧱 **Base Code**   | `ABCD`    | Unique identifier for the primary stone batch |
+| ✂️ **Part**        | `1`       | Indicates this is a sub-part of the original  |
+| 🔎 **Scan Number** | `105`     | Scan session or tracking reference            |
+| 🛠️ **Stage**       | `POLISH`  | Current processing stage                      |
+
+import { Form } from "/snippets/form.mdx";
+
+## 🧪 Stone Verification Tool
+
+Use our interactive tool to verify your diamond stones instantly via API.
+
+<Form />
+
+---

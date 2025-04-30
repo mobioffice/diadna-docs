@@ -1,33 +1,28 @@
 ---
-title: 'Introduction'
-description: 'Example section for showcasing API endpoints'
+title: "Introduction"
+description: "Section for showcasing API endpoints"
 ---
-
-<Note>
-  If you're not looking to build API reference documentation, you can delete
-  this section by removing the api-reference folder.
-</Note>
 
 ## Welcome
 
-There are two ways to build API documentation: [OpenAPI](https://mintlify.com/docs/api-playground/openapi/setup) and [MDX components](https://mintlify.com/docs/api-playground/mdx/configuration). For the starter kit, we are using the following OpenAPI specification.
+Welcome to the **Diadna API documentation**.
 
-<Card
-  title="Plant Store Endpoints"
-  icon="leaf"
-  href="https://github.com/mintlify/starter/blob/main/api-reference/openapi.json"
->
-  View the OpenAPI specification file
-</Card>
+Here you'll find all the information you need to authenticate, connect, and interact with our API endpoints.
 
-## Authentication
+### Getting Your Secret Key
 
-All API endpoints are authenticated using Bearer tokens and picked up from the specification file.
+To access the Diadna API, you must include a `secrety-key` in your request headers.  
+This key is essential for validating and securing your API requests.
 
-```json
-"security": [
-  {
-    "bearerAuth": []
-  }
-]
+> 💬 **How to get your `secrety-key`**:  
+> Please reach out to one of our support team members. They will provide you with your personal `secrety-key`.
+
+Once you have your key, use it in the headers of every request as shown below:
+
+```http
+GET /your-endpoint
+Host: api.diadna.com
+secrety-key: your-secrety-key
 ```
+
+⚠️ **Important:** Ensure your `secrety-key` is kept confidential. Invalid or missing keys will result in authentication errors.

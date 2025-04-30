@@ -1,0 +1,164 @@
+import { useState } from "react";
+
+export const Form = () => {
+  const [formData, setFormData] = useState({
+    name: "",
+    email: "",
+    stoneCode: "",
+    base: "",
+    part: "",
+    scan: "",
+    stage: "",
+  });
+
+const handleChange = (e) => {
+setFormData((prev) => ({
+...prev,
+[e.target.name]: e.target.value,
+}));
+};
+
+const handleSubmit = async (e) => {
+e.preventDefault();
+try {
+const res = await fetch("/api/submit", {
+method: "POST",
+headers: { "Content-Type": "application/json" },
+body: JSON.stringify(formData),
+});
+const data = await res.json();
+console.log("Submitted:", data);
+} catch (err) {
+console.error("API error", err);
+}
+};
+
+return (
+
+<form
+  onSubmit={handleSubmit}
+  className="space-y-4  p-6 rounded-xl shadow-md max-w-xl mx-auto"
+>
+  <div className="flex flex-col">
+    <label htmlFor="name" className="mb-1 text-sm font-medium text-[#15803D]">
+      Name
+    </label>
+    <input
+      id="name"
+      name="name"
+      value={formData.name}
+      onChange={handleChange}
+      placeholder="Enter Name"
+      className="border border-[#07C983] rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[#00FF6F]"
+    />
+  </div>
+
+{" "}
+
+<div className="flex flex-col">
+  <label htmlFor="email" className="mb-1 text-sm font-medium text-[#15803D]">
+    Email
+  </label>
+  <input
+    id="email"
+    name="email"
+    value={formData.email}
+    onChange={handleChange}
+    placeholder="Enter Email"
+    className="border border-[#07C983] rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[#00FF6F]"
+  />
+</div>
+
+{" "}
+
+<div className="flex flex-col">
+  <label
+    htmlFor="stoneCode"
+    className="mb-1 text-sm font-medium text-[#15803D]"
+  >
+    Stone Code
+  </label>
+  <input
+    id="stoneCode"
+    name="stoneCode"
+    value={formData.stoneCode}
+    onChange={handleChange}
+    placeholder="Enter Stone Code"
+    className="border border-[#07C983] rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[#00FF6F]"
+  />
+</div>
+
+{" "}
+
+<div className="flex flex-col">
+  <label htmlFor="base" className="mb-1 text-sm font-medium text-[#15803D]">
+    Base
+  </label>
+  <input
+    id="base"
+    name="base"
+    value={formData.base}
+    onChange={handleChange}
+    placeholder="Enter Base"
+    className="border border-[#07C983] rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[#00FF6F]"
+  />
+</div>
+
+{" "}
+
+<div className="flex flex-col">
+  <label htmlFor="part" className="mb-1 text-sm font-medium text-[#15803D]">
+    Part
+  </label>
+  <input
+    id="part"
+    name="part"
+    value={formData.part}
+    onChange={handleChange}
+    placeholder="Enter Part"
+    className="border border-[#07C983] rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[#00FF6F]"
+  />
+</div>
+
+{" "}
+
+<div className="flex flex-col">
+  <label htmlFor="scan" className="mb-1 text-sm font-medium text-[#15803D]">
+    Scan
+  </label>
+  <input
+    id="scan"
+    name="scan"
+    value={formData.scan}
+    onChange={handleChange}
+    placeholder="Enter Scan"
+    className="border border-[#07C983] rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[#00FF6F]"
+  />
+</div>
+
+{" "}
+
+<div className="flex flex-col">
+  <label htmlFor="stage" className="mb-1 text-sm font-medium text-[#15803D]">
+    Stage
+  </label>
+  <input
+    id="stage"
+    name="stage"
+    value={formData.stage}
+    onChange={handleChange}
+    placeholder="Enter Stage"
+    className="border border-[#07C983] rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[#00FF6F]"
+  />
+</div>
+
+  <button
+    type="submit"
+    className="bg-[#07C983] hover:bg-[#15803D] text-white font-semibold py-2 px-4 rounded"
+  >
+    Submit
+  </button>
+</form>
+
+);
+};
