@@ -1,164 +1,161 @@
 import { useState } from "react";
-
+import { Icon } from '@mintlify/components';
 export const Form = () => {
   const [formData, setFormData] = useState({
-    name: "",
+    firstName: "",
+    lastName: "",
     email: "",
-    stoneCode: "",
-    base: "",
-    part: "",
-    scan: "",
-    stage: "",
+    phone: "",
+    message: "",
   });
+
+const [errors, setErrors] = useState({});
+const [submitting, setSubmitting] = useState(false);
+const [submitted, setSubmitted] = useState(false);
 
 const handleChange = (e) => {
 setFormData((prev) => ({
 ...prev,
 [e.target.name]: e.target.value,
 }));
+setErrors((prev) => ({
+...prev,
+[e.target.name]: "",
+}));
+};
+
+const validate = () => {
+const newErrors = {};
+if (!formData.firstName.trim()) newErrors.firstName = "First name is required.";
+if (!formData.lastName.trim()) newErrors.lastName = "Last name is required.";
+if (!formData.email.trim()) newErrors.email = "Email is required.";
+else if (!/\S+@\S+\.\S+/.test(formData.email)) newErrors.email = "Invalid email.";
+if (!formData.phone.trim()) newErrors.phone = "Phone is required.";
+if (!formData.message.trim()) newErrors.message = "Message cannot be empty.";
+return newErrors;
 };
 
 const handleSubmit = async (e) => {
 e.preventDefault();
-try {
-const res = await fetch("/api/submit", {
-method: "POST",
-headers: { "Content-Type": "application/json" },
-body: JSON.stringify(formData),
-});
-const data = await res.json();
-console.log("Submitted:", data);
-} catch (err) {
-console.error("API error", err);
+const validationErrors = validate();
+if (Object.keys(validationErrors).length > 0) {
+setErrors(validationErrors);
+return;
 }
+
+    setSubmitting(true);
+    try {
+      const res = await fetch("/api/contact", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(formData),
+      });
+      await res.json();
+    } catch (err) {
+      console.error("API error", err);
+    } finally {
+      setSubmitted(true);
+      setSubmitting(false);
+    }
+
 };
 
 return (
 
+<div className="relative w-full">
+<div
+className={`transition-transform duration-700 ${
+          submitted ? "rotate-y-180" : ""
+        }`}
+style={{
+          transformStyle: "preserve-3d",
+          perspective: "1000px",
+        }} >
+{!submitted ? (
 <form
-  onSubmit={handleSubmit}
-  className="space-y-4  p-6 rounded-xl shadow-md max-w-xl mx-auto"
->
-  <div className="flex flex-col">
-    <label htmlFor="name" className="mb-1 text-sm font-medium text-[#15803D]">
-      Name
-    </label>
-    <input
-      id="name"
-      name="name"
-      value={formData.name}
-      onChange={handleChange}
-      placeholder="Enter Name"
-      className="border border-[#07C983] rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[#00FF6F]"
-    />
-  </div>
-
-{" "}
-
-<div className="flex flex-col">
-  <label htmlFor="email" className="mb-1 text-sm font-medium text-[#15803D]">
-    Email
-  </label>
-  <input
-    id="email"
-    name="email"
-    value={formData.email}
-    onChange={handleChange}
-    placeholder="Enter Email"
-    className="border border-[#07C983] rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[#00FF6F]"
-  />
+            onSubmit={handleSubmit}
+            className="space-y-6 p-6 rounded-xl shadow-md max-w-4xl mx-auto bg-black text-white"
+          >
+<div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+{[
+{ id: "firstName", label: "First Name" },
+{ id: "lastName", label: "Last Name" },
+{ id: "email", label: "Email" },
+{ id: "phone", label: "Phone" },
+].map(({ id, label }) => (
+<div className="flex flex-col" key={id}>
+<label htmlFor={id} className="mb-1 text-sm font-medium text-[#15803D]">
+{label}
+</label>
+<input
+id={id}
+name={id}
+value={formData[id]}
+onChange={handleChange}
+placeholder={`Enter ${label}`}
+className={`border bg-black px-3 py-2 text-white focus:outline-none focus:ring-1 ${
+                      errors[id]
+                        ? "border-red-500 ring-red-500"
+                        : "border-[#6f6f6f] focus:ring-[#00FF6F]"
+                    }`}
+/>
+{errors[id] && (
+<span className="text-sm text-red-500 mt-1">{errors[id]}</span>
+)}
 </div>
+))}
 
-{" "}
+              <div className="sm:col-span-2 flex flex-col">
+                <label htmlFor="message" className="mb-1 text-sm font-medium text-[#15803D]">
+                  Message
+                </label>
+                <textarea
+                  id="message"
+                  name="message"
+                  rows="4"
+                  value={formData.message}
+                  onChange={handleChange}
+                  placeholder="Write your message here"
+                  className={`border bg-black px-3 py-2 text-white focus:outline-none focus:ring-1 ${
+                    errors.message
+                      ? "border-red-500 ring-red-500"
+                      : "border-[#6f6f6f] focus:ring-[#00FF6F]"
+                  }`}
+                />
+                {errors.message && (
+                  <span className="text-sm text-red-500 mt-1">{errors.message}</span>
+                )}
+              </div>
+            </div>
 
-<div className="flex flex-col">
-  <label
-    htmlFor="stoneCode"
-    className="mb-1 text-sm font-medium text-[#15803D]"
-  >
-    Stone Code
-  </label>
-  <input
-    id="stoneCode"
-    name="stoneCode"
-    value={formData.stoneCode}
-    onChange={handleChange}
-    placeholder="Enter Stone Code"
-    className="border border-[#07C983] rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[#00FF6F]"
-  />
+            <button
+              type="submit"
+              disabled={submitting}
+              className="bg-[#003215] border border-[#00ff6f] text-white w-full min-h-[37.6px] text-sm transition-colors flex justify-center items-center"
+            >
+              {submitting ? (
+                <div className="h-4 w-4 border-2 border-t-transparent border-[#00FF6F] rounded-full animate-spin" />
+              ) : (
+                "Contact Us"
+              )}
+            </button>
+          </form>
+        ) : (
+          <div className="p-8 rounded-xl shadow-md max-w-4xl mx-auto bg-black text-white flex flex-col items-center space-y-4">
+            <div className="w-10 h-10 border-2 border-[#00FF6F] rounded-full flex items-center justify-center">
+          <Icon
+
+icon="check"  
+ color="#00FF6F"  
+ size={24}  
+/>
 </div>
-
-{" "}
-
-<div className="flex flex-col">
-  <label htmlFor="base" className="mb-1 text-sm font-medium text-[#15803D]">
-    Base
-  </label>
-  <input
-    id="base"
-    name="base"
-    value={formData.base}
-    onChange={handleChange}
-    placeholder="Enter Base"
-    className="border border-[#07C983] rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[#00FF6F]"
-  />
+<h2 className="text-lg font-semibold text-[#fff]">Thank you!</h2>
+<p className="text-sm text-[#00FF6F]">We’ll get back to you soon.</p>
 </div>
-
-{" "}
-
-<div className="flex flex-col">
-  <label htmlFor="part" className="mb-1 text-sm font-medium text-[#15803D]">
-    Part
-  </label>
-  <input
-    id="part"
-    name="part"
-    value={formData.part}
-    onChange={handleChange}
-    placeholder="Enter Part"
-    className="border border-[#07C983] rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[#00FF6F]"
-  />
+)}
 </div>
-
-{" "}
-
-<div className="flex flex-col">
-  <label htmlFor="scan" className="mb-1 text-sm font-medium text-[#15803D]">
-    Scan
-  </label>
-  <input
-    id="scan"
-    name="scan"
-    value={formData.scan}
-    onChange={handleChange}
-    placeholder="Enter Scan"
-    className="border border-[#07C983] rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[#00FF6F]"
-  />
 </div>
-
-{" "}
-
-<div className="flex flex-col">
-  <label htmlFor="stage" className="mb-1 text-sm font-medium text-[#15803D]">
-    Stage
-  </label>
-  <input
-    id="stage"
-    name="stage"
-    value={formData.stage}
-    onChange={handleChange}
-    placeholder="Enter Stage"
-    className="border border-[#07C983] rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[#00FF6F]"
-  />
-</div>
-
-  <button
-    type="submit"
-    className="bg-[#07C983] hover:bg-[#15803D] text-white font-semibold py-2 px-4 rounded"
-  >
-    Submit
-  </button>
-</form>
 
 );
 };

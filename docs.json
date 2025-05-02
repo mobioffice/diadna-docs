@@ -15,7 +15,7 @@
         "groups": [
           {
             "group": "Get Started",
-            "pages": ["introduction", "stonecodesetup"]
+            "pages": ["introduction", "stonecodesetup", "support"]
           }
         ]
       },
@@ -42,18 +42,13 @@
     "dark": "/logo/dark.svg"
   },
   "navbar": {
-    "links": [
-      {
-        "label": "Support",
-        "href": "mailto:hi@mintlify.com"
-      }
-    ],
     "primary": {
       "type": "button",
       "label": "Dashboard",
-      "href": "https://dashboard.mintlify.com"
+      "href": "https://diadnacloud.mobioffice.io/"
     }
   },
+
   "footer": {
     "socials": {
       "x": "https://x.com/mintlify",
