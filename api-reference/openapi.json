@@ -1,8 +1,8 @@
 {
   "openapi": "3.1.0",
   "info": {
-    "title": "Diadna Stone Verification API",
-    "description": "APIs to verify and register stones for Diadna system.",
+    "title": "DiaDNAStone Verification API",
+    "description": "APIs to verify and register stones for DiaDNAsystem.",
     "version": "1.0.0",
     "license": {
       "name": "MIT"

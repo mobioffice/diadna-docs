@@ -5,24 +5,24 @@ description: "Section for showcasing API endpoints"
 
 ## Welcome
 
-Welcome to the **Diadna API documentation**.
+Welcome to the **DiaDNAAPI documentation**.
 
 Here you'll find all the information you need to authenticate, connect, and interact with our API endpoints.
 
 ### Getting Your Secret Key
 
-To access the Diadna API, you must include a `secrety-key` in your request headers.  
+To access the DiaDNAAPI, you must include a `secret-key` in your request headers.  
 This key is essential for validating and securing your API requests.
 
-> 💬 **How to get your `secrety-key`**:  
-> Please reach out to one of our support team members. They will provide you with your personal `secrety-key`.
+> 💬 **How to get your `secret-key`**:  
+> Please reach out to one of our support team members. They will provide you with your personal `secret-key`.
 
 Once you have your key, use it in the headers of every request as shown below:
 
 ```http
 GET /your-endpoint
-Host: api.diadna.com
-secrety-key: your-secrety-key
+Host: https://prod.di-dna.mobioffice.io/
+secret-key: your-secret-key
 ```
 
-⚠️ **Important:** Ensure your `secrety-key` is kept confidential. Invalid or missing keys will result in authentication errors.
+⚠️ **Important:** Ensure your `secret-key` is kept confidential. Invalid or missing keys will result in authentication errors.

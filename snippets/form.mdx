@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { Icon } from '@mintlify/components';
+import { useState } from "react"
+import { Icon } from "@mintlify/components"
 
 export const Form = () => {
   const [formData, setFormData] = useState({
@@ -50,10 +50,10 @@ return;
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          "Accept": "application/json, text/plain, */*",
+          Accept: "application/json, text/plain, */*",
           "Accept-Language": "en-GB,en;q=0.8",
-          "Origin": "https://mobioffice.mstate.ai",
-          "Referer": "https://mobioffice.mstate.ai/",
+          Origin: "https://mobioffice.mstate.ai",
+          Referer: "https://mobioffice.mstate.ai/",
           "secret-key": "MaSjxQGFJv3FtboXoUJX",
         },
         body: JSON.stringify({
@@ -83,6 +83,7 @@ return;
 };
 
 return (
+
 <div className="relative w-full">
 <div
 className={`transition-transform duration-700 ${submitted ? "rotate-y-180" : ""}`}
@@ -90,7 +91,7 @@ style={{ transformStyle: "preserve-3d", perspective: "1000px" }} >
 {!submitted ? (
 <form
             onSubmit={handleSubmit}
-            className="space-y-6 p-6 rounded-xl shadow-md max-w-4xl mx-auto bg-black text-white"
+            className="space-y-6 p-6 rounded-xl shadow-md max-w-4xl mx-auto bg-[#121212] text-white"
           >
 <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
 {[
@@ -109,13 +110,15 @@ name={id}
 value={formData[id]}
 onChange={handleChange}
 placeholder={`Enter ${label}`}
-className={`border bg-black px-3 py-2 text-white focus:outline-none focus:ring-1 ${
+className={`bg-[#121212] appearance-none border px-3 py-2 text-white placeholder:text-gray-400 focus:outline-none focus:ring-1 ${
                       errors[id]
                         ? "border-red-500 ring-red-500"
                         : "border-[#6f6f6f] focus:ring-[#00FF6F]"
                     }`}
 />
-{errors[id] && <span className="text-sm text-red-500 mt-1">{errors[id]}</span>}
+{errors[id] && (
+<span className="text-sm text-red-500 mt-1">{errors[id]}</span>
+)}
 </div>
 ))}
 
@@ -130,7 +133,7 @@ className={`border bg-black px-3 py-2 text-white focus:outline-none focus:ring-1
                   value={formData.message}
                   onChange={handleChange}
                   placeholder="Write your message here"
-                  className={`border bg-black px-3 py-2 text-white focus:outline-none focus:ring-1 ${
+                  className={`bg-[#121212] appearance-none border px-3 py-2 text-white placeholder:text-gray-400 focus:outline-none focus:ring-1 ${
                     errors.message
                       ? "border-red-500 ring-red-500"
                       : "border-[#6f6f6f] focus:ring-[#00FF6F]"
@@ -150,12 +153,12 @@ className={`border bg-black px-3 py-2 text-white focus:outline-none focus:ring-1
               {submitting ? (
                 <div className="h-4 w-4 border-2 border-t-transparent border-[#00FF6F] rounded-full animate-spin" />
               ) : (
-                "Contact Us"
+                "Get In Touch"
               )}
             </button>
           </form>
         ) : (
-          <div className="p-8 rounded-xl shadow-md max-w-4xl mx-auto bg-black text-white flex flex-col items-center space-y-4">
+          <div className="p-8 rounded-xl shadow-md max-w-4xl mx-auto bg-[#121212] text-white flex flex-col items-center space-y-4">
             <div className="w-10 h-10 border-2 border-[#00FF6F] rounded-full flex items-center justify-center">
               <Icon icon="check" color="#00FF6F" size={24} />
             </div>
