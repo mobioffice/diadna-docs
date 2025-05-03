@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Icon } from '@mintlify/components';
+
 export const Form = () => {
   const [formData, setFormData] = useState({
     firstName: "",
@@ -45,11 +46,32 @@ return;
 
     setSubmitting(true);
     try {
-      const res = await fetch("/api/contact", {
+      const res = await fetch("https://api.mstate.mobioffice.io/api/workflow/v2/execute", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(formData),
+        headers: {
+          "Content-Type": "application/json",
+          "Accept": "application/json, text/plain, */*",
+          "Accept-Language": "en-GB,en;q=0.8",
+          "Origin": "https://mobioffice.mstate.ai",
+          "Referer": "https://mobioffice.mstate.ai/",
+          "secret-key": "MaSjxQGFJv3FtboXoUJX",
+        },
+        body: JSON.stringify({
+          instanceID: "",
+          name: "diadna/support",
+          action: {
+            name: "User Input",
+            payload: {
+              name: `${formData.firstName} ${formData.lastName}`,
+              app: "Test",
+              email: formData.email,
+              message: formData.message,
+              phone: formData.phone,
+            },
+          },
+        }),
       });
+
       await res.json();
     } catch (err) {
       console.error("API error", err);
@@ -61,16 +83,10 @@ return;
 };
 
 return (
-
 <div className="relative w-full">
 <div
-className={`transition-transform duration-700 ${
-          submitted ? "rotate-y-180" : ""
-        }`}
-style={{
-          transformStyle: "preserve-3d",
-          perspective: "1000px",
-        }} >
+className={`transition-transform duration-700 ${submitted ? "rotate-y-180" : ""}`}
+style={{ transformStyle: "preserve-3d", perspective: "1000px" }} >
 {!submitted ? (
 <form
             onSubmit={handleSubmit}
@@ -99,9 +115,7 @@ className={`border bg-black px-3 py-2 text-white focus:outline-none focus:ring-1
                         : "border-[#6f6f6f] focus:ring-[#00FF6F]"
                     }`}
 />
-{errors[id] && (
-<span className="text-sm text-red-500 mt-1">{errors[id]}</span>
-)}
+{errors[id] && <span className="text-sm text-red-500 mt-1">{errors[id]}</span>}
 </div>
 ))}
 
@@ -143,19 +157,14 @@ className={`border bg-black px-3 py-2 text-white focus:outline-none focus:ring-1
         ) : (
           <div className="p-8 rounded-xl shadow-md max-w-4xl mx-auto bg-black text-white flex flex-col items-center space-y-4">
             <div className="w-10 h-10 border-2 border-[#00FF6F] rounded-full flex items-center justify-center">
-          <Icon
-
-icon="check"  
- color="#00FF6F"  
- size={24}  
-/>
-</div>
-<h2 className="text-lg font-semibold text-[#fff]">Thank you!</h2>
-<p className="text-sm text-[#00FF6F]">We’ll get back to you soon.</p>
-</div>
-)}
-</div>
-</div>
+              <Icon icon="check" color="#00FF6F" size={24} />
+            </div>
+            <h2 className="text-lg font-semibold text-[#fff]">Thank you!</h2>
+            <p className="text-sm text-[#00FF6F]">We’ll get back to you soon.</p>
+          </div>
+        )}
+      </div>
+    </div>
 
 );
 };
