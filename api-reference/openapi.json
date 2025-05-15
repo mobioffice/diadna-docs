@@ -14,7 +14,7 @@
     }
   ],
   "paths": {
-    "/diamond/isStonesVerified": {
+    "/diamond/areStonesVerified": {
       "post": {
         "summary": "Check if stones are verified",
         "description": "Verifies if the provided stones are matched, not matched, or need referral.",
@@ -47,7 +47,7 @@
         }
       }
     },
-    "/diamond/isStonesRegistered": {
+    "/diamond/areStonesRegistered": {
       "post": {
         "summary": "Check if stones are registered",
         "description": "Checks if the provided stones are already registered in the system.",
