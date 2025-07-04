@@ -2,7 +2,7 @@
   "openapi": "3.1.0",
   "info": {
     "title": "DiaDNAStone Verification API",
-    "description": "APIs to verify and register stones for DiaDNAsystem.",
+    "description": "APIs to verify and register stones for DiaDNA system.",
     "version": "1.0.0",
     "license": {
       "name": "MIT"
@@ -79,6 +79,117 @@
           }
         }
       }
+    },
+    "/diamond/getMainFilesByStoneId": {
+      "get": {
+        "summary": "Get main files by stone ID",
+        "description": "Fetches the main files associated with a specific stone ID and stage.",
+        "security": [
+          {
+            "SecretKeyAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "stoneId",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "The stone ID (e.g., 12659-229)"
+          },
+          {
+            "name": "stage",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "enum": ["ROUGH", "POLISH", "AFTERSAWING"]
+            },
+            "description": "Stage of the stone"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Main files fetched successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MainFilesResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/diamond/getFilesByQueryId": {
+      "get": {
+        "summary": "Get files by query ID",
+        "description": "Fetches file data for a given query ID, including transactions and mains.",
+        "security": [
+          {
+            "SecretKeyAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "queryId",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Query ID to fetch data for"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Files data fetched successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/FilesByQueryIdResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/queryGroup/addQueryIdsToQueryGroup": {
+      "post": {
+        "summary": "Update query group with query IDs",
+        "description": "Adds or removes query IDs from the specified query group.",
+        "security": [
+          {
+            "SecretKeyAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateQueryGroupRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Query group updated successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UpdateQueryGroupResponse"
+                }
+              }
+            }
+          }
+        }
+      }
     }
   },
   "components": {
@@ -98,23 +209,16 @@
             "items": {
               "type": "object",
               "properties": {
-                "id": {
-                  "type": "string",
-                  "description": "Stone ID"
-                },
+                "id": { "type": "string" },
                 "type": {
                   "type": "string",
-                  "description": "Stone type for verification",
                   "enum": ["POLISH-POLISH", "POLISH", "ROUGH", "POLISH-ROUGH"]
                 }
               },
               "required": ["id", "type"]
             }
           },
-          "companyName": {
-            "type": "string",
-            "description": "Name of the company"
-          }
+          "companyName": { "type": "string" }
         },
         "required": ["stones", "companyName"]
       },
@@ -126,13 +230,9 @@
             "items": {
               "type": "object",
               "properties": {
-                "stone": {
-                  "type": "string",
-                  "description": "Stone ID"
-                },
+                "stone": { "type": "string" },
                 "result": {
                   "type": "string",
-                  "description": "Verification result",
                   "enum": ["MATCHED", "NO MATCH", "REFER", "No Query"]
                 }
               },
@@ -149,23 +249,16 @@
             "items": {
               "type": "object",
               "properties": {
-                "id": {
-                  "type": "string",
-                  "description": "Stone ID"
-                },
+                "id": { "type": "string" },
                 "type": {
                   "type": "string",
-                  "description": "Stone type for registration",
                   "enum": ["POLISH", "ROUGH", "AFTERSAWING"]
                 }
               },
               "required": ["id", "type"]
             }
           },
-          "companyName": {
-            "type": "string",
-            "description": "Name of the company"
-          }
+          "companyName": { "type": "string" }
         },
         "required": ["stones", "companyName"]
       },
@@ -177,23 +270,150 @@
             "items": {
               "type": "object",
               "properties": {
-                "id": {
-                  "type": "string",
-                  "description": "Stone ID"
-                },
-                "type": {
-                  "type": "string",
-                  "description": "Stone type"
-                },
-                "result": {
-                  "type": "boolean",
-                  "description": "Registration status (true if registered, false if not)"
-                }
+                "id": { "type": "string" },
+                "type": { "type": "string" },
+                "result": { "type": "boolean" }
               },
               "required": ["id", "type", "result"]
             }
           }
         }
+      },
+      "MainFilesResponse": {
+        "type": "object",
+        "properties": {
+          "Table": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "is_active": { "type": "boolean" },
+                "created_at": { "type": "string", "format": "date-time" },
+                "created_by": { "type": ["string", "null"] },
+                "updated_at": { "type": "string", "format": "date-time" },
+                "updated_by": { "type": ["string", "null"] },
+                "deleted_at": {
+                  "type": ["string", "null"],
+                  "format": "date-time"
+                },
+                "deleted_by": { "type": ["string", "null"] },
+                "id": { "type": "string" },
+                "name": { "type": "string" },
+                "base": { "type": "string" },
+                "part": { "type": ["string", "null"] },
+                "scan": { "type": "string" },
+                "stage": { "type": "string" },
+                "points": { "type": "string" },
+                "companyId": { "type": "string" }
+              },
+              "required": [
+                "id",
+                "name",
+                "base",
+                "scan",
+                "stage",
+                "companyId",
+                "is_active",
+                "created_at",
+                "updated_at",
+                "points"
+              ]
+            }
+          }
+        },
+        "required": ["Table"]
+      },
+      "FilesByQueryIdResponse": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "object",
+            "properties": {
+              "id": { "type": "string" },
+              "base": { "type": "string" },
+              "remark": { "type": "string" },
+              "expected_result": { "type": "string" },
+              "stage": { "type": "string" },
+              "status": { "type": "string" },
+              "jsonData": { "type": ["object", "null"] },
+              "companyId": { "type": "string" },
+              "Table": {
+                "type": "object",
+                "properties": {
+                  "transactions": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "name": { "type": "string" },
+                        "stage": { "type": "string" },
+                        "points": { "type": "string" }
+                      },
+                      "required": ["name", "stage", "points"]
+                    }
+                  },
+                  "mains": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "name": { "type": "string" },
+                        "stage": { "type": "string" },
+                        "points": { "type": "string" }
+                      },
+                      "required": ["name", "stage", "points"]
+                    }
+                  }
+                }
+              }
+            },
+            "required": [
+              "id",
+              "base",
+              "remark",
+              "expected_result",
+              "stage",
+              "status",
+              "jsonData",
+              "companyId",
+              "Table"
+            ]
+          }
+        }
+      },
+      "UpdateQueryGroupRequest": {
+        "type": "object",
+        "properties": {
+          "QueryGroupID": {
+            "type": "integer",
+            "description": "ID of the query group"
+          },
+          "addedQueryIds": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "List of query IDs to add"
+          },
+          "removedQueryIds": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "List of query IDs to remove"
+          }
+        },
+        "required": ["QueryGroupID", "addedQueryIds", "removedQueryIds"]
+      },
+      "UpdateQueryGroupResponse": {
+        "type": "object",
+        "properties": {
+          "message": {
+            "type": "string",
+            "example": "Query Group Updated Successfully"
+          }
+        },
+        "required": ["message"]
       }
     }
   }
