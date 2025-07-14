@@ -33,7 +33,8 @@
               "api-reference/endpoint/areStonesVerified",
               "api-reference/endpoint/getMainFilesByStoneId",
               "api-reference/endpoint/getFilesByQueryId",
-              "api-reference/endpoint/addQueryIdsToQueryGroup"
+              "api-reference/endpoint/addQueryIdsToQueryGroup",
+              "api-reference/endpoint/submitMainFiles"
             ]
           }
         ]

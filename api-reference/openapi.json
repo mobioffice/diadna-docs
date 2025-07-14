@@ -10,7 +10,7 @@
   },
   "servers": [
     {
-      "url": "https://prod.di-dna.mobioffice.io/"
+      "url": "https://api.diadna.cloud/"
     }
   ],
   "paths": {
@@ -190,6 +190,40 @@
           }
         }
       }
+    },
+    "/diamond/submitMainFiles": {
+      "post": {
+        "summary": "Submit Main File Scan IDs",
+        "description": "Submits main file scan IDs to the system for processing or storage.",
+        "security": [
+          {
+            "BearerAuth": [],
+            "SecretKeyAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SubmitMainFilesRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Main files submitted successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SubmitMainFilesResponse"
+                }
+              }
+            }
+          }
+        }
+      }
     }
   },
   "components": {
@@ -198,6 +232,11 @@
         "type": "apiKey",
         "in": "header",
         "name": "secret-key"
+      },
+      "BearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
       }
     },
     "schemas": {
@@ -414,6 +453,33 @@
           }
         },
         "required": ["message"]
+      },
+      "SubmitMainFilesRequest": {
+        "type": "object",
+        "properties": {
+          "scanIds": {
+            "type": "array",
+            "items": {
+              "type": "integer"
+            },
+            "description": "List of scan ID numbers to be submitted"
+          }
+        },
+        "required": ["scanIds"]
+      },
+      "SubmitMainFilesResponse": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean",
+            "example": true
+          },
+          "message": {
+            "type": "string",
+            "example": "Main files submitted successfully."
+          }
+        },
+        "required": ["success", "message"]
       }
     }
   }
