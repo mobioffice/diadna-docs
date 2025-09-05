@@ -36,7 +36,7 @@ GET https://example.com/your-end-point?barcode={barcode}
 ### Headers (if any)
 
 ```http
-Authorization: Bearer <your-api-token>
+secret-key: <your-api-key>
 Accept: application/json
 Content-Type: application/json
 ```
@@ -45,7 +45,7 @@ Content-Type: application/json
 
 ```http
 GET https://example.com/your-end-point?barcode=165165165
-Authorization: Bearer sk_test_123456
+secret-key: sk_test_123456
 Accept: application/json
 Content-Type: application/json
 ```
