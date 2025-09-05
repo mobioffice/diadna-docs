@@ -15,7 +15,7 @@
         "groups": [
           {
             "group": "Get Started",
-            "pages": ["introduction", "stonecodesetup", "support"]
+            "pages": ["introduction", "stonecodesetup", "support", "barcodetostoneid"]
           }
         ]
       },
