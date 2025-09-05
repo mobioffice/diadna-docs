@@ -1,0 +1,62 @@
+---
+title: "Stone ID to Tracr ID"
+description: " This document is a **reference for developers** to implement stoneId → tracr ID conversion and integrate with the vendor API in DiaDNA."
+---
+
+import { Form } from "/snippets/form.mdx";
+
+
+## API Reference
+
+### Endpoint
+
+```http
+GET https://example.com/your-end-point?stoneId={stoneId}
+```
+
+### Headers (if any)
+
+```http
+secret-key: <your-api-key>
+Accept: application/json
+Content-Type: application/json
+```
+
+### Request Example
+
+```http
+GET https://example.com/your-end-point?stoneId=ABCD.1
+secret-key: sk_test_123456
+Accept: application/json
+Content-Type: application/json
+```
+
+### Successful Response
+
+```json
+{
+  "stoneId": "ABCD.1",
+  "tracrId": "123456"
+}
+```
+
+### Error Response
+
+```json
+{
+  "error": "Invalid barcode or stone not found"
+}
+```
+
+---
+
+## Integration Notes
+- **Rough stones** return only the base (e.g., `ABCD`).  
+- **Split stones** return the part suffix (e.g., `ABCD.1`, `ABCD.2`).  
+
+---
+If you have any queries, please submit a ticket using the form below:
+
+## 🛠️ Support
+<Form />
+
